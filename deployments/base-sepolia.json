@@ -1,0 +1,12 @@
+{
+  "network": "base-sepolia",
+  "factoryAddress": "0x9F2e8Ee423f11cCeDfe0f3bdb8E10Aa11Ac02AD7",
+  "deployer": "0x23de198F1520ad386565fc98AEE6abb3Ae5052BE",
+  "sponsorWallet": "0x23de198F1520ad386565fc98AEE6abb3Ae5052BE",
+  "blockNumber": 29378023,
+  "timestamp": "2025-08-06T23:52:14.541Z",
+  "contractAbis": {
+    "factory": "GuateRewardsFactory",
+    "businessRewards": "BusinessRewards"
+  }
+}

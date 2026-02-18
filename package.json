@@ -1,0 +1,27 @@
+{
+  "name": "guate-rewards",
+  "version": "1.0.0",
+  "description": "Hybrid Web2/Web3 rewards platform for Guatemala businesses",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:base": "hardhat run scripts/deploy.js --network base",
+    "deploy:base-testnet": "hardhat run scripts/deploy.js --network base-sepolia",
+    "backend": "node backend/server.js",
+    "frontend": "cd frontend && npm run dev"
+  },
+  "keywords": ["rewards", "loyalty", "nft", "guatemala", "web3"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "hardhat": "^2.19.0",
+    "dotenv": "^16.3.1"
+  },
+  "dependencies": {
+    "ethers": "^6.9.0"
+  }
+}
