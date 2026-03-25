@@ -334,11 +334,11 @@ export default function MerchantPortal() {
     const accent = restaurant?.accentColor || '#FFFF00';
 
     const TABS = [
-        { id: 'pos',       label: '💰 POS' },
-        { id: 'premios',   label: '🎁 Premios' },
-        { id: 'analytics', label: '📊 Stats' },
-        { id: 'reviews',   label: '⭐ Reseñas' },
-        { id: 'ajustes',   label: '⚙️ Ajustes' },
+        { id: 'pos',       label: 'POS' },
+        { id: 'premios',   label: 'Premios' },
+        { id: 'analytics', label: 'Stats' },
+        { id: 'reviews',   label: 'Reseñas' },
+        { id: 'ajustes',   label: 'Ajustes' },
     ];
 
     return (
@@ -626,13 +626,13 @@ export default function MerchantPortal() {
                         {/* KPI Cards */}
                         <div className="grid grid-cols-2 gap-4">
                             {[
-                                { label: 'CLIENTES', value: analytics.overview?.uniqueCustomers ?? 0, emoji: '👥', bg: 'bg-yellow-300' },
-                                { label: 'VISITAS TOTALES', value: analytics.overview?.totalTransactions ?? 0, emoji: '📋', bg: 'bg-white' },
-                                { label: 'PTS EMITIDOS', value: analytics.overview?.totalPointsIssued ?? 0, emoji: '⭐', bg: 'bg-white' },
-                                { label: 'PTS CANJEADOS', value: analytics.overview?.totalPointsRedeemed ?? 0, emoji: '🎁', bg: 'bg-red-100' },
-                            ].map(({ label, value, emoji, bg }) => (
+                                { label: 'CLIENTES', value: analytics.overview?.uniqueCustomers ?? 0, bg: 'bg-yellow-300' },
+                                { label: 'VISITAS TOTALES', value: analytics.overview?.totalTransactions ?? 0, bg: 'bg-white' },
+                                { label: 'PTS EMITIDOS', value: analytics.overview?.totalPointsIssued ?? 0, bg: 'bg-white' },
+                                { label: 'PTS CANJEADOS', value: analytics.overview?.totalPointsRedeemed ?? 0, bg: 'bg-red-100' },
+                            ].map(({ label, value, bg }) => (
                                 <div key={label} className={`border-4 border-black p-4 shadow-brutal-sm ${bg}`}>
-                                    <p className="font-mono text-xs opacity-60 mb-1">{emoji} {label}</p>
+                                    <p className="font-mono text-xs opacity-60 mb-1">{label}</p>
                                     <p className="font-black text-3xl font-mono">{value.toLocaleString()}</p>
                                 </div>
                             ))}
@@ -641,7 +641,7 @@ export default function MerchantPortal() {
                         {/* Redemption ratio */}
                         {analytics.overview?.totalPointsIssued > 0 && (
                             <div className="border-4 border-black p-5 bg-white shadow-brutal-sm">
-                                <p className="font-black text-sm mb-3">📈 TASA DE CANJE</p>
+                                <p className="font-black text-sm mb-3">TASA DE CANJE</p>
                                 <div className="h-5 border-2 border-black bg-gray-100 overflow-hidden">
                                     <div
                                         className="h-full bg-black transition-all"
@@ -659,7 +659,7 @@ export default function MerchantPortal() {
                         {/* Daily activity bar chart */}
                         {analytics.dailyActivity?.length > 0 && (
                             <div className="border-4 border-black p-5 bg-white shadow-brutal-sm">
-                                <p className="font-black text-sm mb-4">📅 VISITAS — ÚLTIMOS 14 DÍAS</p>
+                                <p className="font-black text-sm mb-4">VISITAS — ÚLTIMOS 14 DÍAS</p>
                                 <BarChart
                                     data={analytics.dailyActivity}
                                     valueKey="visits"
@@ -671,7 +671,7 @@ export default function MerchantPortal() {
                         {/* Points issued bar chart */}
                         {analytics.dailyActivity?.length > 0 && (
                             <div className="border-4 border-black p-5 bg-white shadow-brutal-sm">
-                                <p className="font-black text-sm mb-4">⭐ PUNTOS EMITIDOS — ÚLTIMOS 14 DÍAS</p>
+                                <p className="font-black text-sm mb-4">PUNTOS EMITIDOS — ÚLTIMOS 14 DÍAS</p>
                                 <BarChart
                                     data={analytics.dailyActivity}
                                     valueKey="pointsIssued"
@@ -685,12 +685,12 @@ export default function MerchantPortal() {
                         {analytics.topCustomers?.length > 0 && (
                             <div className="border-4 border-black bg-white shadow-brutal-sm">
                                 <div className="border-b-4 border-black px-5 py-3 bg-black text-yellow-300">
-                                    <p className="font-black text-sm">🏆 TOP CLIENTES</p>
+                                    <p className="font-black text-sm">TOP CLIENTES</p>
                                 </div>
                                 {analytics.topCustomers.map((c, i) => (
                                     <div key={i} className="flex items-center gap-4 px-5 py-3 border-b-2 border-black last:border-b-0">
                                         <span className="font-black text-2xl w-8 text-center">
-                                            {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i+1}`}
+                                            {`#${i+1}`}
                                         </span>
                                         <span className="font-mono text-sm flex-1">{c.phone}</span>
                                         <span className="font-black font-mono text-lg">{c.points.toLocaleString()} pts</span>
@@ -715,7 +715,7 @@ export default function MerchantPortal() {
                 {tab === 'reviews' && (
                     <div className="space-y-4">
                         <div className="border-4 border-black bg-white shadow-brutal p-5">
-                            <h2 className="font-black text-xl mb-1">⭐ RESEÑAS DE CLIENTES</h2>
+                            <h2 className="font-black text-xl mb-1">RESEÑAS DE CLIENTES</h2>
                             <p className="font-mono text-sm opacity-60 mb-4">Puedes ocultar reseñas que no quieras mostrar públicamente.</p>
                             {reviewsLoading ? (
                                 <div className="text-center py-8">
@@ -723,7 +723,6 @@ export default function MerchantPortal() {
                                 </div>
                             ) : reviews.length === 0 ? (
                                 <div className="border-4 border-black p-8 text-center bg-gray-50">
-                                    <p className="text-4xl mb-2">🌱</p>
                                     <p className="font-black">AÚN NO HAY RESEÑAS</p>
                                     <p className="font-mono text-sm opacity-60 mt-1">Las reseñas aparecerán aquí cuando los clientes visiten tu perfil</p>
                                 </div>
@@ -750,7 +749,7 @@ export default function MerchantPortal() {
                                                         rv.isVisible ? 'bg-white hover:bg-red-100' : 'bg-gray-200 hover:bg-green-100'
                                                     }`}
                                                 >
-                                                    {rv.isVisible ? '🙈 OCULTAR' : '👁️ MOSTRAR'}
+                                                    {rv.isVisible ? 'OCULTAR' : 'MOSTRAR'}
                                                 </button>
                                             </div>
                                             {rv.text && (
@@ -850,7 +849,7 @@ export default function MerchantPortal() {
 
                         {/* API Key */}
                         <div className="border-4 border-black shadow-brutal bg-white p-6">
-                            <h2 className="font-black text-xl mb-2">🔑 API KEY (INTEGRACIÓN POS)</h2>
+                            <h2 className="font-black text-xl mb-2">API KEY (INTEGRACIÓN POS)</h2>
                             <p className="font-mono text-sm mb-4 opacity-60">
                                 Usa esta clave para conectar cualquier sistema de POS, tablet o aplicación.
                                 Sin login — solo la clave.
@@ -889,7 +888,7 @@ Content-Type: application/json
                                 onClick={rotateKey}
                                 className="mt-4 w-full border-4 border-black border-red-400 bg-red-100 font-black py-2 text-sm hover:bg-red-300 transition-colors"
                             >
-                                ⚠️ REGENERAR API KEY
+                                REGENERAR API KEY
                             </button>
                         </div>
 

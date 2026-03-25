@@ -10,10 +10,10 @@ import WalletPass from './WalletPass';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002';
 
 const TIER_CONFIG = {
-    BRONCE:  { color: '#CD7F32', next: 'PLATA',   nextAt: 250,  emoji: '🥉' },
-    PLATA:   { color: '#C0C0C0', next: 'ORO',     nextAt: 750,  emoji: '🥈' },
-    ORO:     { color: '#FFD700', next: 'PLATINO', nextAt: 2000, emoji: '🥇' },
-    PLATINO: { color: '#000',    next: null,       nextAt: null, emoji: '💎', textColor: '#fff' },
+    BRONCE:  { color: '#CD7F32', next: 'PLATA',   nextAt: 250,  emoji: '' },
+    PLATA:   { color: '#C0C0C0', next: 'ORO',     nextAt: 750,  emoji: '' },
+    ORO:     { color: '#FFD700', next: 'PLATINO', nextAt: 2000, emoji: '' },
+    PLATINO: { color: '#000',    next: null,       nextAt: null, emoji: '', textColor: '#fff' },
 };
 
 const TIER_MIN = { BRONCE: 0, PLATA: 250, ORO: 750, PLATINO: 2000 };
@@ -77,7 +77,7 @@ function InviteSection({ profile }) {
     function shareWhatsApp() {
         if (!code) return;
         const text = encodeURIComponent(
-            `¡Únete a Reguards! Gana puntos en restaurantes de Guatemala 🍽️\nUsa mi código: *${code}*\nhttps://reguards.app/signup?ref=${code}`
+            `¡Únete a Reguards! Gana puntos en restaurantes de Guatemala\nUsa mi código: *${code}*\nhttps://reguards.app/signup?ref=${code}`
         );
         window.open(`https://wa.me/?text=${text}`, '_blank');
     }
@@ -107,7 +107,7 @@ function InviteSection({ profile }) {
                         onClick={shareWhatsApp}
                         className="w-full bg-green-500 border-4 border-black text-white font-black py-3 shadow-brutal-sm hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
                     >
-                        📱 COMPARTIR POR WHATSAPP
+                        COMPARTIR POR WHATSAPP
                     </button>
                 </div>
             ) : (
@@ -142,7 +142,7 @@ function LoyaltyQR({ profile }) {
                 onClick={() => setShowQR(true)}
                 className="w-full border-4 border-black bg-white shadow-brutal-sm py-5 font-black text-lg hover:bg-yellow-50 hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
             >
-                📲 MOSTRAR MI QR DE LEALTAD
+                MOSTRAR MI QR DE LEALTAD
             </button>
         );
     }
@@ -234,7 +234,7 @@ export default function Dashboard() {
                 { birthDate: { month: parseInt(birthdayEdit.month), day: parseInt(birthdayEdit.day) } },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            toast.success('¡Cumpleaños guardado! 🎂');
+            toast.success('¡Cumpleaños guardado!');
             fetchData();
         } catch (err) {
             toast.error(err.response?.data?.error || 'Error guardando');
@@ -308,16 +308,16 @@ export default function Dashboard() {
             {/* Nav bar */}
             <nav className="border-b-4 border-black bg-white flex max-w-xl mx-auto">
                 <Link to="/dashboard" className="flex-1 py-3 text-center font-black text-xs border-r-2 border-black bg-black text-yellow-300">
-                    🏠 INICIO
+                    INICIO
                 </Link>
                 <Link to="/events" className="flex-1 py-3 text-center font-black text-xs border-r-2 border-black hover:bg-yellow-50 transition-colors">
-                    🎉 EVENTOS
+                    EVENTOS
                 </Link>
                 <Link to="/explore" className="flex-1 py-3 text-center font-black text-xs border-r-2 border-black hover:bg-yellow-50 transition-colors">
-                    🗺️ EXPLORAR
+                    EXPLORAR
                 </Link>
                 <Link to="/events?tab=ranking" className="flex-1 py-3 text-center font-black text-xs hover:bg-yellow-50 transition-colors">
-                    🏆 RANKING
+                    RANKING
                 </Link>
             </nav>
 
@@ -331,13 +331,12 @@ export default function Dashboard() {
                     }`}>
                         <div>
                             <span className="font-black text-lg">
-                                {'🔥'.repeat(Math.min(profile.streakDays >= 30 ? 3 : profile.streakDays >= 7 ? 2 : 1, 3))}
-                                {' '}{profile.streakDays} días seguidos
+                                {profile.streakDays} días seguidos
                             </span>
                             <p className="font-mono text-xs opacity-70">
                                 {profile.streakDays === 3  ? '¡+25 pts bonus desbloqueados!' :
                                  profile.streakDays === 7  ? '¡+100 pts bonus desbloqueados!' :
-                                 profile.streakDays === 30 ? '¡+500 pts bonus desbloqueados! 💎' :
+                                 profile.streakDays === 30 ? '¡+500 pts bonus desbloqueados!' :
                                  profile.streakDays < 3  ? `${3 - profile.streakDays} días más para bonus de 25 pts` :
                                  profile.streakDays < 7  ? `${7 - profile.streakDays} días más para bonus de 100 pts` :
                                  profile.streakDays < 30 ? `${30 - profile.streakDays} días más para bonus de 500 pts` :
@@ -345,7 +344,7 @@ export default function Dashboard() {
                             </p>
                         </div>
                         <span className="font-black text-3xl">
-                            {profile.streakDays >= 30 ? '💎' : profile.streakDays >= 7 ? '🏆' : '⚡'}
+                            {profile.streakDays >= 30 ? '' : profile.streakDays >= 7 ? '' : ''}
                         </span>
                     </div>
                 )}
@@ -353,7 +352,7 @@ export default function Dashboard() {
                 {/* Birthday banner */}
                 {isBirthday && (
                     <div className="border-4 border-black bg-pink-300 p-4 text-center shadow-brutal animate-pulse">
-                        <p className="font-black text-2xl">🎂 ¡FELIZ CUMPLEAÑOS!</p>
+                        <p className="font-black text-2xl">¡FELIZ CUMPLEAÑOS!</p>
                         <p className="font-mono text-sm mt-1">
                             Te regalamos <span className="font-black">100 puntos</span> hoy. ¡Disfruta tu día!
                         </p>
@@ -374,7 +373,7 @@ export default function Dashboard() {
                 {challenges.length > 0 && (
                     <div className="border-4 border-black bg-white shadow-brutal-sm">
                         <div className="border-b-4 border-black px-5 py-3">
-                            <span className="font-black text-lg">⚡ DESAFÍOS ACTIVOS</span>
+                            <span className="font-black text-lg">DESAFÍOS ACTIVOS</span>
                         </div>
                         <div className="divide-y-4 divide-black">
                             {challenges.map((ch) => {
@@ -426,7 +425,7 @@ export default function Dashboard() {
                 {achievements.length > 0 && (
                     <div className="border-4 border-black bg-white shadow-brutal-sm">
                         <div className="border-b-4 border-black px-5 py-3 flex items-center justify-between">
-                            <span className="font-black text-lg">🏆 LOGROS ({achievements.length})</span>
+                            <span className="font-black text-lg">LOGROS ({achievements.length})</span>
                         </div>
                         <div className="p-4 grid grid-cols-4 gap-3">
                             {achievements.map((ach, i) => (
@@ -451,7 +450,7 @@ export default function Dashboard() {
                 {upcomingEvents.length > 0 && (
                     <div className="border-4 border-black bg-white shadow-brutal-sm">
                         <div className="border-b-4 border-black px-5 py-3 flex items-center justify-between">
-                            <span className="font-black">🎉 PRÓXIMOS EVENTOS</span>
+                            <span className="font-black">PRÓXIMOS EVENTOS</span>
                             <Link to="/events" className="font-mono text-xs underline font-bold">VER TODOS →</Link>
                         </div>
                         {upcomingEvents.map(ev => (
@@ -487,7 +486,7 @@ export default function Dashboard() {
 
                 {/* Rewards Grid */}
                 <div>
-                    <h2 className="font-black text-2xl mb-4">🎁 PREMIOS</h2>
+                    <h2 className="font-black text-2xl mb-4">PREMIOS</h2>
                     {rewards.length === 0 ? (
                         <div className="border-4 border-black p-8 text-center bg-gray-50">
                             <p className="font-black">AÚN NO HAY PREMIOS</p>
@@ -510,12 +509,12 @@ export default function Dashboard() {
                                         </div>
                                         {reward.campaign && (
                                             <div className="bg-orange-500 text-white font-mono font-black text-xs px-2 py-0.5 mb-2 inline-block">
-                                                🔥 {reward.campaign.multiplier}X — {reward.campaign.name}
+                                                {reward.campaign.multiplier}X — {reward.campaign.name}
                                             </div>
                                         )}
                                         {reward.isAllied && reward.allianceInfo && (
                                             <div className="bg-black text-yellow-300 font-mono font-black text-xs px-2 py-0.5 mb-2 inline-block">
-                                                🤝 {reward.allianceInfo.allianceName}
+                                                {reward.allianceInfo.allianceName}
                                             </div>
                                         )}
                                         <p className="font-black text-sm uppercase leading-tight mb-1">{reward.name}</p>
@@ -544,7 +543,7 @@ export default function Dashboard() {
 
                 {/* Birthday section */}
                 <div className="border-4 border-black bg-white shadow-brutal-sm p-5">
-                    <h3 className="font-black text-lg mb-1">🎂 TU CUMPLEAÑOS</h3>
+                    <h3 className="font-black text-lg mb-1">TU CUMPLEAÑOS</h3>
                     <p className="font-mono text-sm mb-4 text-gray-600">
                         Recibe <span className="font-black">100 puntos</span> de regalo el día de tu cumpleaños.
                     </p>
@@ -591,7 +590,7 @@ export default function Dashboard() {
                                 disabled={savingBirthday}
                                 className="border-4 border-black bg-yellow-300 font-black px-4 py-2 shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all disabled:opacity-50"
                             >
-                                {savingBirthday ? 'GUARDANDO...' : 'GUARDAR 🎂'}
+                                {savingBirthday ? 'GUARDANDO...' : 'GUARDAR'}
                             </button>
                         </form>
                     )}
@@ -648,10 +647,10 @@ function NotificationFeed({ transactions }) {
 
     return (
         <div>
-            <h2 className="font-black text-2xl mb-4">🔔 ACTIVIDAD</h2>
+            <h2 className="font-black text-2xl mb-4">ACTIVIDAD</h2>
             {transactions.length === 0 ? (
                 <div className="border-4 border-black p-8 text-center bg-gray-50">
-                    <p className="text-4xl mb-2">🌱</p>
+                    <p className="text-4xl mb-2"></p>
                     <p className="font-black">AÚN NO HAY ACTIVIDAD</p>
                     <p className="font-mono text-sm mt-1 opacity-60">Visita un restaurante para empezar</p>
                 </div>

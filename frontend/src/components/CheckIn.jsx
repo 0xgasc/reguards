@@ -78,7 +78,6 @@ export default function CheckIn() {
     if (error) {
         return (
             <div className="min-h-screen bg-white flex flex-col items-center justify-center gap-6 px-4 text-center">
-                <p className="text-6xl">😢</p>
                 <h1 className="font-black text-3xl uppercase">{error}</h1>
                 <Link to="/explore" className="border-4 border-black bg-yellow-300 px-8 py-3 font-black uppercase shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
                     EXPLORAR RESTAURANTES
@@ -111,15 +110,14 @@ export default function CheckIn() {
                         </p>
                         {result.streakDays >= 2 && (
                             <p className="font-black text-sm">
-                                {'🔥'.repeat(Math.min(result.streakDays >= 30 ? 3 : result.streakDays >= 7 ? 2 : 1, 3))}
-                                {' '}{result.streakDays} días seguidos
+                                {result.streakDays} días seguidos
                             </p>
                         )}
                     </div>
 
                     {result.newAchievements?.length > 0 && (
                         <div className="border-4 border-black p-3 space-y-2">
-                            <p className="font-black text-sm">🏆 LOGROS DESBLOQUEADOS</p>
+                            <p className="font-black text-sm">LOGROS DESBLOQUEADOS</p>
                             {result.newAchievements.map((a, i) => (
                                 <div key={i} className="flex items-center gap-2 justify-center">
                                     <span className="text-2xl">{a.emoji}</span>
@@ -183,14 +181,14 @@ export default function CheckIn() {
                     {/* Active campaign */}
                     {campaign && (
                         <div className="border-4 border-black bg-black text-orange-300 p-3 text-center">
-                            <p className="font-black">🔥 {campaign.multiplier}X PUNTOS — {campaign.name}</p>
+                            <p className="font-black">{campaign.multiplier}X PUNTOS — {campaign.name}</p>
                         </div>
                     )}
 
                     {/* Welcome bonus */}
                     {restaurant.welcomeBonus > 0 && (
                         <div className="border-4 border-black bg-yellow-100 p-3 text-center">
-                            <p className="font-black text-sm">👋 Primera visita: +{restaurant.welcomeBonus} pts de bienvenida</p>
+                            <p className="font-black text-sm">Primera visita: +{restaurant.welcomeBonus} pts de bienvenida</p>
                         </div>
                     )}
 
@@ -201,7 +199,7 @@ export default function CheckIn() {
                         className="w-full bg-black text-yellow-300 border-4 border-black font-black text-2xl py-6 shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     >
                         {checkinLoading ? 'REGISTRANDO...' :
-                         !isAuthenticated ? '📱 INICIA SESIÓN PARA GANAR' :
+                         !isAuthenticated ? 'INICIA SESIÓN PARA GANAR' :
                          '✓ REGISTRAR VISITA'}
                     </button>
 
@@ -215,7 +213,7 @@ export default function CheckIn() {
                     {/* Rewards preview */}
                     {restaurant.rewards?.length > 0 && (
                         <div>
-                            <p className="font-black text-sm mb-2">🎁 PREMIOS DISPONIBLES</p>
+                            <p className="font-black text-sm mb-2">PREMIOS DISPONIBLES</p>
                             <div className="space-y-2">
                                 {restaurant.rewards.slice(0, 3).map((rw, i) => (
                                     <div key={i} className="flex items-center justify-between border-2 border-black p-2">

@@ -78,7 +78,6 @@ export default function RestaurantProfile() {
   if (error) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center gap-6 px-4">
-        <p className="text-6xl">😢</p>
         <h1 className="font-black text-3xl uppercase">{error}</h1>
         <Link
           to="/explore"
@@ -106,7 +105,7 @@ export default function RestaurantProfile() {
           </Link>
           {restaurant.isFeatured && (
             <span className="border-4 border-black bg-black text-yellow-300 px-3 py-1 font-black text-sm">
-              ⭐ DESTACADO
+              DESTACADO
             </span>
           )}
         </div>
@@ -121,7 +120,7 @@ export default function RestaurantProfile() {
         <div className="flex items-center justify-center gap-4 mt-4 flex-wrap">
           {restaurant.zone && (
             <span className="border-2 border-black bg-white px-3 py-1 font-bold text-sm">
-              📍 {restaurant.zone}
+              {restaurant.zone}
             </span>
           )}
           {restaurant.category && (
@@ -134,7 +133,7 @@ export default function RestaurantProfile() {
         {/* Active campaign banner */}
         {activeCampaign && (
           <div className="mt-6 max-w-md mx-auto border-4 border-black bg-black text-orange-300 px-6 py-3 font-black text-lg animate-pulse">
-            🔥 {activeCampaign.multiplier}X PUNTOS — {activeCampaign.name}
+            {activeCampaign.multiplier}X PUNTOS — {activeCampaign.name}
           </div>
         )}
       </div>
@@ -162,7 +161,7 @@ export default function RestaurantProfile() {
         {alliances?.length > 0 && (
           <section>
             <h2 className="font-black text-2xl uppercase border-b-4 border-black pb-2 mb-4">
-              🤝 ALIANZAS ACTIVAS
+              ALIANZAS ACTIVAS
             </h2>
             <div className="space-y-3">
               {alliances.map((a, i) => (
@@ -190,7 +189,7 @@ export default function RestaurantProfile() {
         {restaurant.rewards?.length > 0 && (
           <section>
             <h2 className="font-black text-2xl uppercase border-b-4 border-black pb-2 mb-4">
-              🎁 PREMIOS DISPONIBLES
+              PREMIOS DISPONIBLES
             </h2>
             <div className="space-y-3">
               {restaurant.rewards.map((rw, i) => (
@@ -219,7 +218,7 @@ export default function RestaurantProfile() {
         {events?.length > 0 && (
           <section>
             <h2 className="font-black text-2xl uppercase border-b-4 border-black pb-2 mb-4">
-              🎉 PRÓXIMOS EVENTOS
+              PRÓXIMOS EVENTOS
             </h2>
             <div className="space-y-3">
               {events.map((ev, i) => (
@@ -234,7 +233,7 @@ export default function RestaurantProfile() {
                           hour: '2-digit', minute: '2-digit',
                         })}
                       </p>
-                      {ev.venue && <p className="font-mono text-sm opacity-60">📍 {ev.venue}</p>}
+                      {ev.venue && <p className="font-mono text-sm opacity-60">{ev.venue}</p>}
                       <div className="flex gap-2 mt-2 flex-wrap">
                         {ev.isFree
                           ? <span className="bg-green-200 border border-black px-2 py-0.5 font-black text-xs">GRATIS</span>
@@ -256,7 +255,7 @@ export default function RestaurantProfile() {
         {(restaurant.address || restaurant.phone || restaurant.website) && (
           <section>
             <h2 className="font-black text-2xl uppercase border-b-4 border-black pb-2 mb-4">
-              📍 INFORMACIÓN
+              INFORMACIÓN
             </h2>
             <div className="border-4 border-black p-5 space-y-2">
               {restaurant.address && (
@@ -280,7 +279,7 @@ export default function RestaurantProfile() {
         {/* Reviews */}
         <section>
           <h2 className="font-black text-2xl uppercase border-b-4 border-black pb-2 mb-4">
-            ⭐ RESEÑAS
+            RESEÑAS
           </h2>
 
           {/* Avg rating summary */}

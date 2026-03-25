@@ -253,7 +253,7 @@ export default function AdminPanel() {
     try {
       const headers = { Authorization: `Bearer ${token}` };
       await axios.patch(`${API_URL}/api/admin/restaurants/${id}/feature`, { isFeatured: !isFeatured }, { headers });
-      toast.success(isFeatured ? 'Restaurante removido de destacados' : '⭐ ¡Restaurante destacado!');
+      toast.success(isFeatured ? 'Restaurante removido de destacados' : '¡Restaurante destacado!');
       fetchMerchants();
     } catch (err) {
       toast.error('Error actualizando');
@@ -604,7 +604,7 @@ export default function AdminPanel() {
                   : 'bg-neobrutalist-white hover:bg-neobrutalist-gray-100'
               }`}
             >
-              🎉 EVENTOS
+              EVENTOS
             </button>
             <button
               onClick={() => { setActiveTab('merchants'); fetchMerchants(); }}
@@ -614,7 +614,7 @@ export default function AdminPanel() {
                   : 'bg-neobrutalist-white hover:bg-neobrutalist-gray-100'
               }`}
             >
-              🏪 COMERCIANTES
+              COMERCIANTES
             </button>
             <button
               onClick={() => { setActiveTab('alliances'); fetchAlliances(); fetchMerchants(); }}
@@ -624,7 +624,7 @@ export default function AdminPanel() {
                   : 'bg-neobrutalist-white hover:bg-neobrutalist-gray-100'
               }`}
             >
-              🤝 ALIANZAS
+              ALIANZAS
             </button>
             <button
               onClick={() => { setActiveTab('campaigns'); fetchCampaigns(); fetchMerchants(); }}
@@ -634,7 +634,7 @@ export default function AdminPanel() {
                   : 'bg-neobrutalist-white hover:bg-neobrutalist-gray-100'
               }`}
             >
-              🔥 CAMPAÑAS
+              CAMPAÑAS
             </button>
             <button
               onClick={() => { setActiveTab('challenges'); fetchChallenges(); }}
@@ -644,7 +644,7 @@ export default function AdminPanel() {
                   : 'bg-neobrutalist-white hover:bg-neobrutalist-gray-100'
               }`}
             >
-              ⚡ DESAFÍOS
+              DESAFÍOS
             </button>
             <button
               onClick={() => setActiveTab('broadcast')}
@@ -654,7 +654,7 @@ export default function AdminPanel() {
                   : 'bg-neobrutalist-white hover:bg-neobrutalist-gray-100'
               }`}
             >
-              📢 BROADCAST
+              BROADCAST
             </button>
           </div>
         </div>
@@ -936,7 +936,7 @@ export default function AdminPanel() {
             {/* Create Event Form */}
             <div className="border-4 border-black shadow-brutal bg-white">
               <div className="p-5 border-b-4 border-black bg-yellow-300">
-                <h2 className="text-2xl font-black uppercase">✨ CREAR EVENTO</h2>
+                <h2 className="text-2xl font-black uppercase">CREAR EVENTO</h2>
               </div>
               <form onSubmit={createEvent} className="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
@@ -1092,7 +1092,7 @@ export default function AdminPanel() {
             {/* Events list */}
             <div className="border-4 border-black shadow-brutal bg-white">
               <div className="p-5 border-b-4 border-black bg-black text-yellow-300 flex items-center justify-between">
-                <h2 className="text-2xl font-black uppercase">📋 TODOS LOS EVENTOS</h2>
+                <h2 className="text-2xl font-black uppercase">TODOS LOS EVENTOS</h2>
                 <button onClick={fetchEvents} className="border-2 border-yellow-300 px-3 py-1 font-mono text-sm hover:bg-yellow-300 hover:text-black transition-colors">
                   ↺ ACTUALIZAR
                 </button>
@@ -1123,7 +1123,7 @@ export default function AdminPanel() {
                             <div className="flex gap-3 mt-1 font-mono text-xs">
                               <span className="text-green-700 font-bold">✓ {ev.confirmedCount} confirmados</span>
                               {ev.pendingCount > 0 && (
-                                <span className="text-orange-600 font-bold animate-pulse">⏳ {ev.pendingCount} pendientes</span>
+                                <span className="text-orange-600 font-bold animate-pulse">{ev.pendingCount} pendientes</span>
                               )}
                               {ev.pointsReward > 0 && (
                                 <span className="bg-yellow-300 border border-black px-1">+{ev.pointsReward}pts</span>
@@ -1221,7 +1221,7 @@ export default function AdminPanel() {
             {/* Create merchant form */}
             <div className="border-4 border-black shadow-brutal bg-white">
               <div className="p-5 border-b-4 border-black bg-yellow-300">
-                <h2 className="text-2xl font-black uppercase">🏪 NUEVO COMERCIANTE</h2>
+                <h2 className="text-2xl font-black uppercase">NUEVO COMERCIANTE</h2>
               </div>
               <form onSubmit={createMerchant} className="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
@@ -1342,7 +1342,7 @@ export default function AdminPanel() {
             {/* Merchants list */}
             <div className="border-4 border-black shadow-brutal bg-white">
               <div className="p-5 border-b-4 border-black bg-black text-yellow-300 flex items-center justify-between">
-                <h2 className="text-2xl font-black uppercase">📋 COMERCIANTES ACTIVOS</h2>
+                <h2 className="text-2xl font-black uppercase">COMERCIANTES ACTIVOS</h2>
                 <button onClick={fetchMerchants} className="border-2 border-yellow-300 px-3 py-1 font-mono text-sm hover:bg-yellow-300 hover:text-black transition-colors">
                   ↺ ACTUALIZAR
                 </button>
@@ -1383,7 +1383,7 @@ export default function AdminPanel() {
                               )}
                               {m.zone && (
                                 <span className="bg-green-100 border border-black px-2 py-0.5 font-bold">
-                                  📍 {m.zone}
+                                  {m.zone}
                                 </span>
                               )}
                               {m.welcomeBonus > 0 && (
@@ -1404,7 +1404,7 @@ export default function AdminPanel() {
                             }`}
                             title={m.isFeatured ? 'Quitar de destacados' : 'Marcar como destacado'}
                           >
-                            {m.isFeatured ? '⭐ DESTACADO' : '☆ DESTACAR'}
+                            {m.isFeatured ? 'DESTACADO' : 'DESTACAR'}
                           </button>
                           <div>
                             <p className="font-mono text-xs text-gray-400 mb-1">API KEY</p>
@@ -1427,7 +1427,7 @@ export default function AdminPanel() {
             {/* Create campaign form */}
             <div className="border-4 border-black shadow-brutal bg-white">
               <div className="p-5 border-b-4 border-black bg-orange-300">
-                <h2 className="text-2xl font-black uppercase">🔥 NUEVA CAMPAÑA</h2>
+                <h2 className="text-2xl font-black uppercase">NUEVA CAMPAÑA</h2>
                 <p className="font-mono text-sm mt-1 opacity-70">Multiplica los puntos por tiempo limitado en un restaurante</p>
               </div>
               <form onSubmit={createCampaign} className="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -1498,7 +1498,7 @@ export default function AdminPanel() {
                     disabled={campaignLoading}
                     className="w-full bg-black text-orange-300 font-black text-lg py-4 border-4 border-black shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all disabled:opacity-40"
                   >
-                    {campaignLoading ? 'CREANDO...' : `🔥 LANZAR CAMPAÑA ${newCampaign.multiplier}X`}
+                    {campaignLoading ? 'CREANDO...' : `LANZAR CAMPAÑA ${newCampaign.multiplier}X`}
                   </button>
                 </div>
               </form>
@@ -1507,7 +1507,7 @@ export default function AdminPanel() {
             {/* Campaigns list */}
             <div className="border-4 border-black shadow-brutal bg-white">
               <div className="p-5 border-b-4 border-black bg-black text-orange-300 flex items-center justify-between">
-                <h2 className="text-2xl font-black uppercase">📋 CAMPAÑAS</h2>
+                <h2 className="text-2xl font-black uppercase">CAMPAÑAS</h2>
                 <button onClick={fetchCampaigns} className="border-2 border-orange-300 px-3 py-1 font-mono text-sm hover:bg-orange-300 hover:text-black transition-colors">
                   ↺ ACTUALIZAR
                 </button>
@@ -1539,7 +1539,7 @@ export default function AdminPanel() {
                             <div>
                               <div className="flex items-center gap-2 flex-wrap">
                                 <p className="font-black text-lg">{c.name}</p>
-                                {isLive && <span className="bg-orange-300 border-2 border-black font-black text-xs px-2 py-0.5 animate-pulse">🔥 EN VIVO</span>}
+                                {isLive && <span className="bg-orange-300 border-2 border-black font-black text-xs px-2 py-0.5 animate-pulse">EN VIVO</span>}
                                 {isExpired && <span className="bg-gray-200 border-2 border-black font-black text-xs px-2 py-0.5">EXPIRADA</span>}
                                 {!isLive && !isExpired && c.isActive && <span className="bg-blue-200 border-2 border-black font-black text-xs px-2 py-0.5">PROGRAMADA</span>}
                               </div>
@@ -1590,7 +1590,7 @@ export default function AdminPanel() {
             {/* Create alliance form */}
             <div className="border-4 border-black shadow-brutal bg-white">
               <div className="p-5 border-b-4 border-black bg-yellow-300">
-                <h2 className="text-2xl font-black uppercase">🤝 NUEVA ALIANZA</h2>
+                <h2 className="text-2xl font-black uppercase">NUEVA ALIANZA</h2>
                 <p className="font-mono text-sm mt-1 opacity-70">Conecta restaurantes para que clientes usen puntos entre ellos</p>
               </div>
               <form onSubmit={createAlliance} className="p-6 space-y-5">
@@ -1703,7 +1703,7 @@ export default function AdminPanel() {
                   disabled={allianceLoading || newAlliance.restaurants.length < 2}
                   className="w-full bg-black text-yellow-300 font-black text-lg py-4 border-4 border-black shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all disabled:opacity-40"
                 >
-                  {allianceLoading ? 'CREANDO...' : '🤝 CREAR ALIANZA'}
+                  {allianceLoading ? 'CREANDO...' : 'CREAR ALIANZA'}
                 </button>
               </form>
             </div>
@@ -1711,7 +1711,7 @@ export default function AdminPanel() {
             {/* Alliances list */}
             <div className="border-4 border-black shadow-brutal bg-white">
               <div className="p-5 border-b-4 border-black bg-black text-yellow-300 flex items-center justify-between">
-                <h2 className="text-2xl font-black uppercase">📋 ALIANZAS ACTIVAS</h2>
+                <h2 className="text-2xl font-black uppercase">ALIANZAS ACTIVAS</h2>
                 <button onClick={fetchAlliances} className="border-2 border-yellow-300 px-3 py-1 font-mono text-sm hover:bg-yellow-300 hover:text-black transition-colors">
                   ↺ ACTUALIZAR
                 </button>
@@ -1803,7 +1803,7 @@ export default function AdminPanel() {
             {/* Create challenge */}
             <div className="border-4 border-black shadow-brutal bg-white">
               <div className="p-5 border-b-4 border-black bg-yellow-300">
-                <h2 className="text-2xl font-black uppercase">⚡ NUEVO DESAFÍO</h2>
+                <h2 className="text-2xl font-black uppercase">NUEVO DESAFÍO</h2>
                 <p className="font-mono text-sm mt-1 opacity-70">Retos mensuales o semanales para mantener clientes activos</p>
               </div>
               <form onSubmit={createChallenge} className="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -1907,7 +1907,7 @@ export default function AdminPanel() {
                     disabled={challengeLoading}
                     className="w-full bg-black text-yellow-300 font-black text-lg py-4 border-4 border-black shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all disabled:opacity-40"
                   >
-                    {challengeLoading ? 'CREANDO...' : '⚡ CREAR DESAFÍO'}
+                    {challengeLoading ? 'CREANDO...' : 'CREAR DESAFÍO'}
                   </button>
                 </div>
               </form>
@@ -1916,7 +1916,7 @@ export default function AdminPanel() {
             {/* Challenges list */}
             <div className="border-4 border-black shadow-brutal bg-white">
               <div className="p-5 border-b-4 border-black bg-black text-yellow-300 flex items-center justify-between">
-                <h2 className="text-2xl font-black uppercase">📋 DESAFÍOS</h2>
+                <h2 className="text-2xl font-black uppercase">DESAFÍOS</h2>
                 <button onClick={fetchChallenges} className="border-2 border-yellow-300 px-3 py-1 font-mono text-sm hover:bg-yellow-300 hover:text-black transition-colors">
                   ↺ ACTUALIZAR
                 </button>
@@ -1971,7 +1971,7 @@ export default function AdminPanel() {
           <div className="max-w-2xl space-y-8">
             <div className="border-4 border-black shadow-brutal bg-white">
               <div className="p-5 border-b-4 border-black bg-green-400">
-                <h2 className="text-2xl font-black uppercase">📢 BROADCAST WHATSAPP</h2>
+                <h2 className="text-2xl font-black uppercase">BROADCAST WHATSAPP</h2>
                 <p className="font-mono text-sm mt-1 opacity-70">Envía un mensaje masivo a tus clientes via WhatsApp</p>
               </div>
               <form onSubmit={sendBroadcast} className="p-6 space-y-5">
@@ -1979,10 +1979,10 @@ export default function AdminPanel() {
                   <label className="block font-black text-sm mb-1">SEGMENTO</label>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {[
-                      { id: 'all', label: '🌎 TODOS' },
-                      { id: 'BRONCE', label: '🥉 BRONCE' },
-                      { id: 'PLATA', label: '🥈 PLATA' },
-                      { id: 'ORO', label: '🥇 ORO' },
+                      { id: 'all', label: 'TODOS' },
+                      { id: 'BRONCE', label: 'BRONCE' },
+                      { id: 'PLATA', label: 'PLATA' },
+                      { id: 'ORO', label: 'ORO' },
                     ].map(seg => (
                       <button
                         key={seg.id}
@@ -2024,7 +2024,7 @@ export default function AdminPanel() {
                       broadcastDryRun ? 'bg-yellow-300' : 'bg-green-400'
                     }`}
                   >
-                    {broadcastDryRun ? '🧪 SIMULACIÓN' : '🚀 REAL'}
+                    {broadcastDryRun ? 'SIMULACIÓN' : 'REAL'}
                   </button>
                 </div>
 
@@ -2038,8 +2038,8 @@ export default function AdminPanel() {
                   {broadcastLoading
                     ? 'PROCESANDO...'
                     : broadcastDryRun
-                    ? '🧪 SIMULAR ENVÍO'
-                    : '📢 ENVIAR A CLIENTES'}
+                    ? 'SIMULAR ENVÍO'
+                    : 'ENVIAR A CLIENTES'}
                 </button>
               </form>
             </div>
@@ -2047,7 +2047,7 @@ export default function AdminPanel() {
             {broadcastResult && (
               <div className={`border-4 border-black p-6 shadow-brutal ${broadcastDryRun ? 'bg-yellow-100' : 'bg-green-100'}`}>
                 <h3 className="font-black text-xl mb-3">
-                  {broadcastResult.dryRun ? '🧪 RESULTADO DE SIMULACIÓN' : '✅ ENVÍO COMPLETADO'}
+                  {broadcastResult.dryRun ? 'RESULTADO DE SIMULACIÓN' : 'ENVÍO COMPLETADO'}
                 </h3>
                 <div className="grid grid-cols-3 gap-3 text-center">
                   <div className="border-4 border-black bg-white p-3">

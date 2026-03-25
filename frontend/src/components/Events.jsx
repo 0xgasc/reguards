@@ -324,7 +324,7 @@ function EventCard({ event, onClick }) {
                 <div className="font-mono text-sm mb-3 text-gray-700">{formatDate(event.date)}</div>
 
                 {event.venue && (
-                    <div className="font-bold text-sm mb-3">📍 {event.venue}</div>
+                    <div className="font-bold text-sm mb-3">{event.venue}</div>
                 )}
 
                 {/* Tags */}
@@ -343,7 +343,7 @@ function EventCard({ event, onClick }) {
                     <div className="flex items-center gap-2">
                         {event.confirmedCount > 0 && (
                             <span className="font-mono text-xs font-bold">
-                                👥 {event.confirmedCount} van
+                                {event.confirmedCount} van
                             </span>
                         )}
                         {event.pointsReward > 0 && (
@@ -390,7 +390,7 @@ function Leaderboard({ token }) {
     return (
         <div className="border-4 border-black bg-white">
             <div className="border-b-4 border-black px-5 py-3 bg-black text-yellow-300">
-                <span className="font-black text-sm">🏆 TOP PUNTOS</span>
+                <span className="font-black text-sm">TOP PUNTOS</span>
             </div>
             {data.slice(0, 10).map(entry => {
                 const tier = TIER_COLORS[entry.tier] || TIER_COLORS.BRONCE;
@@ -401,7 +401,7 @@ function Leaderboard({ token }) {
                     >
                         <div className="flex items-center gap-3">
                             <span className="font-black font-mono text-lg w-8">
-                                {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`}
+                                {`#${entry.rank}`}
                             </span>
                             <div>
                                 <div className="font-mono text-sm font-bold">
@@ -445,7 +445,6 @@ function MyRsvps({ token }) {
     if (!myEvents.length) {
         return (
             <div className="border-4 border-black p-10 text-center">
-                <div className="text-6xl mb-4">🎟️</div>
                 <p className="font-black text-xl">Sin RSVPs aún</p>
                 <p className="font-mono text-sm mt-2 opacity-60">Cuando te apuntes a un evento aparecerá aquí</p>
             </div>
@@ -543,16 +542,15 @@ export default function Events() {
                         <h1 className="font-black text-2xl">EVENTOS</h1>
                         <p className="font-mono text-xs opacity-70">gana puntos asistiendo</p>
                     </div>
-                    <div className="text-3xl">🎪</div>
                 </div>
             </div>
 
             {/* Tabs */}
             <div className="border-b-4 border-black flex max-w-xl mx-auto">
                 {[
-                    { id: 'eventos',    label: '🎉 Eventos' },
-                    { id: 'mis-rsvps', label: '🎟️ Mis RSVPs' },
-                    { id: 'ranking',   label: '🏆 Ranking' },
+                    { id: 'eventos',    label: 'Eventos' },
+                    { id: 'mis-rsvps', label: 'Mis RSVPs' },
+                    { id: 'ranking',   label: 'Ranking' },
                 ].map(t => (
                     <button
                         key={t.id}
@@ -578,7 +576,6 @@ export default function Events() {
                     </div>
                 ) : events.length === 0 ? (
                     <div className="border-4 border-black p-10 text-center">
-                        <div className="text-6xl mb-4">📭</div>
                         <p className="font-black text-xl">Sin eventos próximos</p>
                         <p className="font-mono text-sm mt-2 opacity-60">Vuelve pronto</p>
                     </div>

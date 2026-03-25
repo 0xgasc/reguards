@@ -58,7 +58,7 @@ export default function Explore() {
             <header className="border-b-4 border-black bg-black text-yellow-300 sticky top-0 z-30">
                 <div className="max-w-5xl mx-auto px-4 flex items-center justify-between h-16">
                     <button onClick={() => navigate(-1)} className="font-black text-xl mr-4">←</button>
-                    <div className="font-black text-xl tracking-tight">🗺️ EXPLORAR</div>
+                    <div className="font-black text-xl tracking-tight">EXPLORAR</div>
                     <div className="flex gap-2">
                         {isAuthenticated ? (
                             <Link
@@ -138,7 +138,7 @@ export default function Explore() {
                                 filterAlliance ? 'bg-black text-yellow-300' : 'bg-white hover:bg-yellow-50'
                             }`}
                         >
-                            🤝 CON ALIANZA
+                            CON ALIANZA
                         </button>
                     </div>
                 </div>
@@ -156,7 +156,7 @@ export default function Explore() {
                         {featured.length > 0 && (
                             <section>
                                 <div className="flex items-center gap-3 mb-4">
-                                    <h2 className="font-black text-2xl">⭐ DESTACADOS</h2>
+                                    <h2 className="font-black text-2xl">DESTACADOS</h2>
                                     <span className="bg-black text-yellow-300 font-mono font-black text-xs px-2 py-0.5">PREMIUM</span>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -255,10 +255,10 @@ function RestaurantCard({ restaurant: r, featured, onSelect, isAuthenticated }) 
                 </div>
 
                 {r.zone && (
-                    <p className="font-mono text-xs text-gray-500 mb-2">📍 {r.zone}</p>
+                    <p className="font-mono text-xs text-gray-500 mb-2">{r.zone}</p>
                 )}
                 {r.category && (
-                    <p className="font-mono text-xs text-gray-500 mb-2">🍴 {r.category}</p>
+                    <p className="font-mono text-xs text-gray-500 mb-2">{r.category}</p>
                 )}
 
                 <div className="flex gap-2 flex-wrap mb-3">
@@ -320,7 +320,7 @@ function RestaurantModal({ restaurant: r, isAuthenticated, onClose }) {
                     <span className="text-5xl">{r.emoji}</span>
                     <div className="flex-1 min-w-0">
                         <h2 className="font-black text-2xl leading-tight">{r.name}</h2>
-                        {r.zone && <p className="font-mono text-sm opacity-70">📍 {r.zone}</p>}
+                        {r.zone && <p className="font-mono text-sm opacity-70">{r.zone}</p>}
                     </div>
                     <button
                         onClick={onClose}
@@ -354,7 +354,7 @@ function RestaurantModal({ restaurant: r, isAuthenticated, onClose }) {
 
                     {r.alliances.length > 0 && (
                         <div>
-                            <h3 className="font-black mb-2">🤝 ALIANZAS ACTIVAS</h3>
+                            <h3 className="font-black mb-2">ALIANZAS ACTIVAS</h3>
                             <div className="space-y-2">
                                 {r.alliances.map((a, i) => (
                                     <div key={i} className="border-4 border-black bg-black text-yellow-300 px-4 py-2 font-black text-sm">

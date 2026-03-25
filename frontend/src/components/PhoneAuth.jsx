@@ -82,7 +82,7 @@ export default function PhoneAuth() {
             pin: fullPin,
             referralCode: referralCode || undefined,
           });
-          toast.success(referralCode ? '¡Cuenta creada! +50 pts de bienvenida 🎉' : '¡Cuenta creada!');
+          toast.success(referralCode ? '¡Cuenta creada! +50 pts de bienvenida' : '¡Cuenta creada!');
         } else {
           throw loginError;
         }
@@ -144,8 +144,7 @@ export default function PhoneAuth() {
 
         {/* Referral banner */}
         {referralCode && (
-          <div className="border-4 border-black bg-yellow-300 px-6 py-3 mb-4 flex items-center gap-3 shadow-brutal-sm">
-            <span className="text-2xl">🎁</span>
+          <div className="border-4 border-black bg-yellow-300 px-6 py-3 mb-4 shadow-brutal-sm">
             <div>
               <p className="font-black text-sm">¡FUISTE INVITADO!</p>
               <p className="font-mono text-xs">Código: <strong>{referralCode}</strong> — Ambos ganan 50 puntos</p>

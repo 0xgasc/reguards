@@ -7,10 +7,10 @@ import { useRef, useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 
 const TIER_COLORS = {
-    BRONCE:  { bg: '#CD7F32', text: '#fff', label: '🥉 BRONCE' },
-    PLATA:   { bg: '#C0C0C0', text: '#000', label: '🥈 PLATA'  },
-    ORO:     { bg: '#FFD700', text: '#000', label: '🥇 ORO'    },
-    PLATINO: { bg: '#0a0a0a', text: '#FFFF00', label: '💎 PLATINO' },
+    BRONCE:  { bg: '#CD7F32', text: '#fff', label: 'BRONCE' },
+    PLATA:   { bg: '#C0C0C0', text: '#000', label: 'PLATA'  },
+    ORO:     { bg: '#FFD700', text: '#000', label: 'ORO'    },
+    PLATINO: { bg: '#0a0a0a', text: '#FFFF00', label: 'PLATINO' },
 };
 
 export default function WalletPass({ profile }) {
@@ -173,7 +173,7 @@ export default function WalletPass({ profile }) {
                 onClick={() => setOpen(true)}
                 className="w-full border-4 border-black bg-white shadow-brutal-sm py-5 font-black text-lg hover:bg-yellow-50 hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
             >
-                🪪 MI TARJETA DE LEALTAD
+                MI TARJETA DE LEALTAD
             </button>
         );
     }
@@ -181,7 +181,7 @@ export default function WalletPass({ profile }) {
     return (
         <div className="border-4 border-black shadow-brutal bg-white p-5 space-y-4">
             <div className="flex items-center justify-between">
-                <p className="font-black text-lg">🪪 TU TARJETA REGUARDS</p>
+                <p className="font-black text-lg">TU TARJETA REGUARDS</p>
                 <button
                     onClick={() => { setOpen(false); setRendered(false); }}
                     className="border-2 border-black font-black text-xs px-3 py-1 hover:bg-gray-100"
@@ -204,7 +204,7 @@ export default function WalletPass({ profile }) {
                         onClick={downloadCard}
                         className="flex-1 bg-black text-yellow-300 border-4 border-black font-black py-3 text-sm shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
                     >
-                        ⬇ DESCARGAR PNG
+                        DESCARGAR PNG
                     </button>
                     <button
                         onClick={() => { setRendered(false); setOpen(false); setTimeout(() => setOpen(true), 50); }}
