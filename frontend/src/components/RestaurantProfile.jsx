@@ -22,6 +22,9 @@ export default function RestaurantProfile() {
   const [reviews, setReviews] = useState(null);
   const [myReview, setMyReview] = useState({ rating: 5, text: '', emoji: '😋' });
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [showReserve, setShowReserve] = useState(false);
+  const [reserveForm, setReserveForm] = useState({ date: '', time: '19:00', partySize: 2, notes: '' });
+  const [reserveLoading, setReserveLoading] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -64,6 +67,27 @@ export default function RestaurantProfile() {
       toast.error(err.response?.data?.error || 'Error enviando reseña');
     } finally {
       setSubmittingReview(false);
+    }
+  }
+
+  async function submitReservation(e) {
+    e.preventDefault();
+    if (!isAuthenticated) { toast.error('Inicia sesión para reservar'); return; }
+    if (!reserveForm.date || !reserveForm.time) { toast.error('Fecha y hora requeridos'); return; }
+    setReserveLoading(true);
+    try {
+      await axios.post(
+        `${API_URL}/api/reservations`,
+        { restaurantId: data.restaurant._id, ...reserveForm },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success('¡Reservación enviada!');
+      setShowReserve(false);
+      setReserveForm({ date: '', time: '19:00', partySize: 2, notes: '' });
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Error creando reservación');
+    } finally {
+      setReserveLoading(false);
     }
   }
 
@@ -156,6 +180,87 @@ export default function RestaurantProfile() {
             <p className="font-mono text-xs uppercase mt-1">bono entrada</p>
           </div>
         </div>
+
+        {/* Reservation */}
+        <section>
+          {!showReserve ? (
+            <button
+              onClick={() => setShowReserve(true)}
+              className="w-full border-4 border-black bg-black text-yellow-300 font-black text-lg py-4 shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+            >
+              RESERVAR MESA
+            </button>
+          ) : (
+            <div className="border-4 border-black bg-white shadow-brutal p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-black text-xl">RESERVAR MESA</h3>
+                <button onClick={() => setShowReserve(false)} className="border-2 border-black font-black text-xs px-3 py-1 hover:bg-gray-100">
+                  CERRAR
+                </button>
+              </div>
+              <form onSubmit={submitReservation} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block font-black text-xs mb-1">FECHA</label>
+                    <input
+                      type="date"
+                      value={reserveForm.date}
+                      min={new Date().toISOString().split('T')[0]}
+                      onChange={e => setReserveForm(f => ({ ...f, date: e.target.value }))}
+                      className="w-full border-4 border-black px-3 py-2 font-mono focus:outline-none"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-black text-xs mb-1">HORA</label>
+                    <input
+                      type="time"
+                      value={reserveForm.time}
+                      onChange={e => setReserveForm(f => ({ ...f, time: e.target.value }))}
+                      className="w-full border-4 border-black px-3 py-2 font-mono focus:outline-none"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block font-black text-xs mb-1">PERSONAS</label>
+                  <div className="flex gap-2">
+                    {[1,2,3,4,5,6,8,10].map(n => (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => setReserveForm(f => ({ ...f, partySize: n }))}
+                        className={`flex-1 border-4 border-black font-black py-2 transition-all ${
+                          reserveForm.partySize === n ? 'bg-black text-yellow-300' : 'bg-white hover:bg-yellow-50'
+                        }`}
+                      >
+                        {n}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block font-black text-xs mb-1">NOTAS (opcional)</label>
+                  <textarea
+                    value={reserveForm.notes}
+                    onChange={e => setReserveForm(f => ({ ...f, notes: e.target.value }))}
+                    placeholder="Alergias, ocasión especial, preferencia de mesa..."
+                    maxLength={500}
+                    rows={2}
+                    className="w-full border-4 border-black px-3 py-2 font-mono text-sm resize-none focus:outline-none"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={reserveLoading || !isAuthenticated}
+                  className="w-full bg-yellow-300 border-4 border-black font-black py-3 shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all disabled:opacity-50"
+                >
+                  {!isAuthenticated ? 'INICIA SESION PARA RESERVAR' : reserveLoading ? 'ENVIANDO...' : 'CONFIRMAR RESERVACION'}
+                </button>
+              </form>
+            </div>
+          )}
+        </section>
 
         {/* Active Alliances */}
         {alliances?.length > 0 && (

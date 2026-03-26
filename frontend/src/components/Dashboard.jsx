@@ -183,6 +183,7 @@ export default function Dashboard() {
     const [savingBirthday, setSavingBirthday] = useState(false);
     const [achievements, setAchievements] = useState([]);
     const [challenges, setChallenges] = useState([]);
+    const [reservations, setReservations] = useState([]);
 
     useEffect(() => {
         if (!user || !token) { navigate('/login'); return; }
@@ -193,12 +194,13 @@ export default function Dashboard() {
     async function fetchData() {
         try {
             const headers = { Authorization: `Bearer ${token}` };
-            const [profileRes, rewardsRes, eventsRes, achRes, chalRes] = await Promise.all([
+            const [profileRes, rewardsRes, eventsRes, achRes, chalRes, resRes] = await Promise.all([
                 axios.get(`${API_URL}/api/auth/profile`, { headers }),
                 axios.get(`${API_URL}/api/rewards`, { headers }).catch(() => ({ data: { rewards: [] } })),
                 axios.get(`${API_URL}/api/events`, { headers }).catch(() => ({ data: { events: [] } })),
                 axios.get(`${API_URL}/api/achievements/mine`, { headers }).catch(() => ({ data: { achievements: [] } })),
                 axios.get(`${API_URL}/api/challenges/active`, { headers }).catch(() => ({ data: { challenges: [] } })),
+                axios.get(`${API_URL}/api/reservations/mine`, { headers }).catch(() => ({ data: { reservations: [] } })),
             ]);
 
             setProfile(profileRes.data.user);
@@ -206,6 +208,7 @@ export default function Dashboard() {
             setUpcomingEvents((eventsRes.data.events || []).slice(0, 3));
             setAchievements(achRes.data.achievements || []);
             setChallenges(chalRes.data.challenges || []);
+            setReservations((resRes.data.reservations || []).filter(r => ['pending','confirmed'].includes(r.status)).slice(0, 5));
             // Pre-fill birthday edit if already set
             if (profileRes.data.user.birthDate?.month) {
                 setBirthdayEdit({
@@ -240,6 +243,17 @@ export default function Dashboard() {
             toast.error(err.response?.data?.error || 'Error guardando');
         } finally {
             setSavingBirthday(false);
+        }
+    }
+
+    async function cancelReservation(id) {
+        try {
+            const headers = { Authorization: `Bearer ${token}` };
+            await axios.patch(`${API_URL}/api/reservations/${id}/cancel`, {}, { headers });
+            setReservations(rs => rs.filter(r => r._id !== id));
+            toast.success('Reservación cancelada');
+        } catch (err) {
+            toast.error(err.response?.data?.error || 'Error');
         }
     }
 
@@ -481,6 +495,43 @@ export default function Dashboard() {
                                 </div>
                             </Link>
                         ))}
+                    </div>
+                )}
+
+                {/* Upcoming Reservations */}
+                {reservations.length > 0 && (
+                    <div className="border-4 border-black bg-white shadow-brutal-sm">
+                        <div className="border-b-4 border-black px-5 py-3">
+                            <span className="font-black text-lg">MIS RESERVACIONES</span>
+                        </div>
+                        <div className="divide-y-4 divide-black">
+                            {reservations.map(rv => (
+                                <div key={rv._id} className="p-4 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p className="font-black text-sm">
+                                            {rv.restaurant?.emoji} {rv.restaurant?.name}
+                                        </p>
+                                        <p className="font-mono text-xs opacity-60">
+                                            {new Date(rv.date).toLocaleDateString('es-GT', { weekday: 'short', day: 'numeric', month: 'short' })}
+                                            {' '}{rv.time} — {rv.partySize} pers.
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center gap-2 shrink-0">
+                                        <span className={`border-2 border-black font-black text-xs px-2 py-1 ${
+                                            rv.status === 'confirmed' ? 'bg-green-200' : 'bg-yellow-200'
+                                        }`}>
+                                            {rv.status === 'confirmed' ? 'CONFIRMADA' : 'PENDIENTE'}
+                                        </span>
+                                        <button
+                                            onClick={() => cancelReservation(rv._id)}
+                                            className="border-2 border-black font-black text-xs px-2 py-1 hover:bg-red-100 transition-colors"
+                                        >
+                                            CANCELAR
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 )}
 

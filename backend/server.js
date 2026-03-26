@@ -17,6 +17,7 @@ const Alliance = require('./models/Alliance');
 const Campaign = require('./models/Campaign');
 const Challenge = require('./models/Challenge');
 const Review = require('./models/Review');
+const Reservation = require('./models/Reservation');
 const User = require('./models/User');
 const reviewService = require('./services/reviewService');
 const { ACHIEVEMENTS } = require('./services/achievementService');
@@ -563,6 +564,172 @@ app.get('/health', (req, res) => {
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV || 'development'
     });
+});
+
+// ─── Reservations ───────────────────────────────────────────────────────────
+
+// Helper: verify JWT inline
+function verifyToken(req) {
+    const jwt = require('jsonwebtoken');
+    const token = (req.headers['authorization'] || '').split(' ')[1];
+    if (!token) return null;
+    try { return jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key'); } catch { return null; }
+}
+
+// POST /api/reservations — customer creates a reservation
+app.post('/api/reservations', async (req, res) => {
+    try {
+        const decoded = verifyToken(req);
+        if (!decoded) return res.status(401).json({ error: 'Auth required' });
+
+        const { restaurantId, date, time, partySize, notes } = req.body;
+        if (!restaurantId || !date || !time || !partySize) {
+            return res.status(400).json({ error: 'restaurantId, date, time, partySize required' });
+        }
+
+        const restaurant = await Restaurant.findById(restaurantId);
+        if (!restaurant || !restaurant.isActive) return res.status(404).json({ error: 'Restaurant not found' });
+
+        const reservationDate = new Date(date);
+        if (reservationDate < new Date()) return res.status(400).json({ error: 'Date must be in the future' });
+
+        // Limit: max 3 pending reservations per user
+        const pendingCount = await Reservation.countDocuments({ user: decoded.userId, status: 'pending' });
+        if (pendingCount >= 3) return res.status(400).json({ error: 'Max 3 pending reservations allowed' });
+
+        const reservation = await Reservation.create({
+            restaurant: restaurantId,
+            user: decoded.userId,
+            date: reservationDate,
+            time,
+            partySize: Math.min(Math.max(1, partySize), 20),
+            notes: notes?.slice(0, 500) || '',
+        });
+
+        res.json({ success: true, reservation });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// GET /api/reservations/mine — customer's reservations
+app.get('/api/reservations/mine', async (req, res) => {
+    try {
+        const decoded = verifyToken(req);
+        if (!decoded) return res.status(401).json({ error: 'Auth required' });
+
+        const reservations = await Reservation.find({ user: decoded.userId })
+            .populate('restaurant', 'name emoji slug accentColor')
+            .sort({ date: -1 })
+            .limit(20);
+
+        res.json({ reservations });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// PATCH /api/reservations/:id/cancel — customer cancels own reservation
+app.patch('/api/reservations/:id/cancel', async (req, res) => {
+    try {
+        const decoded = verifyToken(req);
+        if (!decoded) return res.status(401).json({ error: 'Auth required' });
+
+        const reservation = await Reservation.findOne({ _id: req.params.id, user: decoded.userId });
+        if (!reservation) return res.status(404).json({ error: 'Reservation not found' });
+        if (!['pending', 'confirmed'].includes(reservation.status)) {
+            return res.status(400).json({ error: 'Cannot cancel this reservation' });
+        }
+
+        reservation.status = 'cancelled';
+        await reservation.save();
+        res.json({ success: true, reservation });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// GET /api/merchant/reservations — merchant sees reservations for their restaurant
+app.get('/api/merchant/reservations', async (req, res) => {
+    try {
+        const decoded = verifyToken(req);
+        if (!decoded) return res.status(401).json({ error: 'Auth required' });
+
+        const merchant = await User.findById(decoded.userId);
+        if (!merchant || (merchant.role !== 'merchant' && merchant.role !== 'admin')) {
+            return res.status(403).json({ error: 'Merchant access required' });
+        }
+
+        const restaurant = await Restaurant.findOne({ merchantUser: merchant._id });
+        if (!restaurant) return res.status(404).json({ error: 'Restaurant not found' });
+
+        const { status } = req.query;
+        const filter = { restaurant: restaurant._id };
+        if (status) filter.status = status;
+
+        const reservations = await Reservation.find(filter)
+            .populate('user', 'phone totalPoints tier')
+            .sort({ date: 1 })
+            .limit(50);
+
+        res.json({ reservations });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// PATCH /api/merchant/reservations/:id — merchant updates status (confirm/reject/complete/no_show)
+app.patch('/api/merchant/reservations/:id', async (req, res) => {
+    try {
+        const decoded = verifyToken(req);
+        if (!decoded) return res.status(401).json({ error: 'Auth required' });
+
+        const merchant = await User.findById(decoded.userId);
+        if (!merchant || (merchant.role !== 'merchant' && merchant.role !== 'admin')) {
+            return res.status(403).json({ error: 'Merchant access required' });
+        }
+
+        const restaurant = await Restaurant.findOne({ merchantUser: merchant._id });
+        if (!restaurant) return res.status(404).json({ error: 'Restaurant not found' });
+
+        const reservation = await Reservation.findOne({ _id: req.params.id, restaurant: restaurant._id });
+        if (!reservation) return res.status(404).json({ error: 'Reservation not found' });
+
+        const { status, merchantNotes } = req.body;
+        const validTransitions = {
+            pending: ['confirmed', 'rejected'],
+            confirmed: ['completed', 'no_show', 'rejected'],
+        };
+
+        if (status && validTransitions[reservation.status]?.includes(status)) {
+            reservation.status = status;
+
+            // Award bonus points on completion
+            if (status === 'completed') {
+                const bonusPts = Math.max(10, Math.floor(restaurant.pointsPerQuetzal * 15));
+                const customer = await User.findById(reservation.user);
+                if (customer) {
+                    customer.totalPoints += bonusPts;
+                    customer.transactions.push({
+                        type: 'earned',
+                        amount: bonusPts,
+                        description: `Reservation completed at ${restaurant.name}`,
+                        restaurantId: restaurant._id,
+                        timestamp: new Date(),
+                    });
+                    await customer.save();
+                    reservation.bonusPoints = bonusPts;
+                }
+            }
+        }
+
+        if (merchantNotes) reservation.merchantNotes = merchantNotes.slice(0, 500);
+        await reservation.save();
+
+        res.json({ success: true, reservation });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 // Error handling middleware

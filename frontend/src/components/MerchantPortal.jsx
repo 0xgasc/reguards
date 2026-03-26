@@ -79,6 +79,11 @@ export default function MerchantPortal() {
     const [redeemResult, setRedeemResult] = useState(null);
     const [redeemLoading, setRedeemLoading] = useState(false);
 
+    // Reservations state
+    const [reservations, setReservations] = useState([]);
+    const [reservationsLoading, setReservationsLoading] = useState(false);
+    const [reservationFilter, setReservationFilter] = useState('pending');
+
     // Reviews state
     const [reviews, setReviews] = useState([]);
     const [reviewsLoading, setReviewsLoading] = useState(false);
@@ -120,6 +125,35 @@ export default function MerchantPortal() {
             setLoading(false);
         }
     }
+
+    // ── Reservations ──────────────────────────────────────────────────────────
+
+    async function fetchReservations(filter) {
+        setReservationsLoading(true);
+        try {
+            const f = filter || reservationFilter;
+            const res = await axios.get(`${API_URL}/api/merchant/reservations${f !== 'all' ? `?status=${f}` : ''}`, { headers });
+            setReservations(res.data.reservations || []);
+        } catch {
+            toast.error('Error cargando reservaciones');
+        } finally {
+            setReservationsLoading(false);
+        }
+    }
+
+    async function updateReservation(id, status) {
+        try {
+            await axios.patch(`${API_URL}/api/merchant/reservations/${id}`, { status }, { headers });
+            toast.success(status === 'confirmed' ? 'Confirmada' : status === 'completed' ? 'Completada' : 'Actualizada');
+            fetchReservations();
+        } catch {
+            toast.error('Error actualizando');
+        }
+    }
+
+    useEffect(() => {
+        if (tab === 'reservations') fetchReservations();
+    }, [tab]);
 
     // ── Reviews ────────────────────────────────────────────────────────────────
 
@@ -334,11 +368,12 @@ export default function MerchantPortal() {
     const accent = restaurant?.accentColor || '#FFFF00';
 
     const TABS = [
-        { id: 'pos',       label: 'POS' },
-        { id: 'premios',   label: 'Premios' },
-        { id: 'analytics', label: 'Stats' },
-        { id: 'reviews',   label: 'Reseñas' },
-        { id: 'ajustes',   label: 'Ajustes' },
+        { id: 'pos',          label: 'POS' },
+        { id: 'premios',      label: 'Premios' },
+        { id: 'analytics',    label: 'Stats' },
+        { id: 'reservations', label: 'Reservas' },
+        { id: 'reviews',      label: 'Reseñas' },
+        { id: 'ajustes',      label: 'Ajustes' },
     ];
 
     return (
@@ -707,6 +742,118 @@ export default function MerchantPortal() {
                                 {analytics.overview?.pointsPerQuetzal}pt/Q1 ·{' '}
                                 {analytics.restaurant?.rewardCount} premio{analytics.restaurant?.rewardCount !== 1 ? 's' : ''} activo{analytics.restaurant?.rewardCount !== 1 ? 's' : ''}
                             </p>
+                        </div>
+                    </div>
+                )}
+
+                {/* ── RESERVATIONS ────────────────────────────────── */}
+                {tab === 'reservations' && (
+                    <div className="space-y-4">
+                        <div className="border-4 border-black bg-white shadow-brutal p-5">
+                            <h2 className="font-black text-xl mb-4">RESERVACIONES</h2>
+
+                            {/* Filter buttons */}
+                            <div className="flex gap-2 mb-4 flex-wrap">
+                                {[
+                                    { id: 'pending', label: 'PENDIENTES' },
+                                    { id: 'confirmed', label: 'CONFIRMADAS' },
+                                    { id: 'completed', label: 'COMPLETADAS' },
+                                    { id: 'all', label: 'TODAS' },
+                                ].map(f => (
+                                    <button
+                                        key={f.id}
+                                        onClick={() => { setReservationFilter(f.id); fetchReservations(f.id); }}
+                                        className={`border-4 border-black font-black text-xs px-4 py-2 transition-all ${
+                                            reservationFilter === f.id ? 'bg-black text-yellow-300' : 'bg-white hover:bg-yellow-50'
+                                        }`}
+                                    >
+                                        {f.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {reservationsLoading ? (
+                                <div className="text-center py-8">
+                                    <div className="w-8 h-8 border-4 border-black border-t-yellow-300 animate-spin mx-auto" />
+                                </div>
+                            ) : reservations.length === 0 ? (
+                                <div className="border-4 border-black p-8 text-center bg-gray-50">
+                                    <p className="font-black">SIN RESERVACIONES</p>
+                                    <p className="font-mono text-sm opacity-60 mt-1">Las reservaciones aparecerán aquí</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {reservations.map(rv => (
+                                        <div key={rv._id} className="border-4 border-black p-4 bg-white">
+                                            <div className="flex items-start justify-between gap-3 mb-2">
+                                                <div>
+                                                    <p className="font-black text-sm">
+                                                        {new Date(rv.date).toLocaleDateString('es-GT', { weekday: 'short', day: 'numeric', month: 'short' })}
+                                                        {' '} {rv.time} — {rv.partySize} persona{rv.partySize !== 1 ? 's' : ''}
+                                                    </p>
+                                                    <p className="font-mono text-xs opacity-50">
+                                                        {rv.user?.phone?.slice(-8) || 'Cliente'}
+                                                        {rv.user?.tier && ` · ${rv.user.tier}`}
+                                                    </p>
+                                                    {rv.notes && <p className="font-mono text-xs mt-1 opacity-70">"{rv.notes}"</p>}
+                                                </div>
+                                                <span className={`shrink-0 border-2 border-black font-black text-xs px-2 py-1 ${
+                                                    rv.status === 'pending' ? 'bg-yellow-200' :
+                                                    rv.status === 'confirmed' ? 'bg-green-200' :
+                                                    rv.status === 'completed' ? 'bg-blue-200' :
+                                                    rv.status === 'rejected' ? 'bg-red-200' :
+                                                    'bg-gray-200'
+                                                }`}>
+                                                    {rv.status === 'pending' ? 'PENDIENTE' :
+                                                     rv.status === 'confirmed' ? 'CONFIRMADA' :
+                                                     rv.status === 'completed' ? 'COMPLETADA' :
+                                                     rv.status === 'rejected' ? 'RECHAZADA' :
+                                                     rv.status === 'no_show' ? 'NO SHOW' :
+                                                     rv.status === 'cancelled' ? 'CANCELADA' : rv.status.toUpperCase()}
+                                                </span>
+                                            </div>
+                                            {/* Action buttons */}
+                                            <div className="flex gap-2 flex-wrap">
+                                                {rv.status === 'pending' && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => updateReservation(rv._id, 'confirmed')}
+                                                            className="border-4 border-black bg-green-300 font-black text-xs px-4 py-2 hover:bg-green-400 transition-colors"
+                                                        >
+                                                            CONFIRMAR
+                                                        </button>
+                                                        <button
+                                                            onClick={() => updateReservation(rv._id, 'rejected')}
+                                                            className="border-4 border-black bg-red-200 font-black text-xs px-4 py-2 hover:bg-red-300 transition-colors"
+                                                        >
+                                                            RECHAZAR
+                                                        </button>
+                                                    </>
+                                                )}
+                                                {rv.status === 'confirmed' && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => updateReservation(rv._id, 'completed')}
+                                                            className="border-4 border-black bg-blue-300 font-black text-xs px-4 py-2 hover:bg-blue-400 transition-colors"
+                                                        >
+                                                            COMPLETADA
+                                                        </button>
+                                                        <button
+                                                            onClick={() => updateReservation(rv._id, 'no_show')}
+                                                            className="border-4 border-black bg-gray-200 font-black text-xs px-4 py-2 hover:bg-gray-300 transition-colors"
+                                                        >
+                                                            NO SHOW
+                                                        </button>
+                                                    </>
+                                                )}
+                                                {rv.bonusPoints > 0 && (
+                                                    <span className="font-mono text-xs font-bold self-center ml-auto">+{rv.bonusPoints}pts otorgados</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}
